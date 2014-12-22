@@ -10,7 +10,7 @@ for(i = 0; i < textLayer.children.length -1; i++){
 	if(i =="length")break;
 	stidx = 0;
 	stlength = search.length;
-	//console.log(textLayer.children);
+	
 	var divLength = textLayer.children[i].innerHTML.length;
 	if(startAt !== 0) i--;
 	var firstCharIndex = textLayer.children[i].innerHTML.indexOf(search[stidx], startAt);
@@ -18,7 +18,7 @@ for(i = 0; i < textLayer.children.length -1; i++){
 
 		for(j = lastMatchPos; j < stlength; j++){
 			charIdx = - lastMatchPos + j; //from the begining of the next div
-			//console.log("charidx", charIdx, 'j:', j);
+			
 			console.log('secText:', textLayer.children[i].innerHTML[charIdx], 'secSearch:', search[parseInt(j)]);
 			if(textLayer.children[i].innerHTML[charIdx] === search[parseInt(j)]){//if chars match in sequence push every char position in temp. match
 				if(charIdx === 0){
@@ -106,21 +106,21 @@ function Prefix(match){
 	var charIdx = match[0].charIdx;
 	var divText = textLayer.children[divIdx].innerHTML;
 	for (var i = prefix.length - 1; i >= 0; i--){
-		j++;
+		j--;
 
-		if(charIdx -j < 0){// if end of div
+		if(charIdx +j < 0){
+		// if end of div
 			--divIdx; 
 			 k = j;//remember position of j
-			 //divText = noWhitespace(textLayer.children[divIdx].innerHTML);
 			 divText = textLayer.children[divIdx].innerHTML;
 			 charIdx = divText.length - 1; // set char index to end of previous div
 			}; 
 		//console.log("j", j, "k", k, "i", i);	
-		if(/\s/.test(divText[charIdx - j + k])){ j--;};
+		if(/\s/.test(divText[charIdx + j - k])){ j--;};
 		if(/\s/.test(prefix[i])){ i--;};
-		console.log('divText[charIdx - j + k]:', divText[charIdx - j + k], 'prefix[i]:', prefix[i], "divTextLength", divText.length);
-		if (divText[charIdx - j + k] === prefix[i]){ // if div is changed k will reset position counter (j) to start from the end of previous div
-			//console.log('prefix[',i,']: true');
+		console.log(i,j,k);
+		console.log('divText char:', divText[charIdx + j - k], 'prefix char:', prefix[i]);
+		if (divText[charIdx + j - k] === prefix[i]){ // if div is changed k will reset position counter (j) to start from the end of previous div
 			continue;
 		}else{
 			return false;
@@ -143,15 +143,13 @@ function Suffix(match){
 		if(charIdx +j > divText.length - 1){// if end of div
 			++divIdx; 
 			 k = j;//remember position of j
-			 //divText = noWhitespace(textLayer.children[divIdx].innerHTML);
 			 divText = textLayer.children[divIdx].innerHTML;
 			 charIdx = 0; // set char index to the start of the next div
 			}; 
-		console.log(divText[charIdx + j - k], suffix[i]);
+		console.log('divText char:',divText[charIdx + j - k], 'suffix char:',suffix[i]);
 		if(/\s/.test(divText[charIdx + j - k])){ j++;}; //if next char is whitespace try next char()
 		if(/\s/.test(suffix[i])){ i++;};
 		if (divText[charIdx + j - k] === suffix[i]){ // if div is changed k will reset position counter (j) to start from the begining of the next div
-			console.log('suffix[',i,']: true');
 			continue;
 		}else{
 			return false;
@@ -160,10 +158,6 @@ function Suffix(match){
 
 	};
 	return true;
-}
-
-function noWhitespace(str){
-return str.replace(/\s/g, "");
 }
 
 function highlight(match){
@@ -179,7 +173,7 @@ function highlight(match){
 	        var newContent = content.substr(0, charIdx) + '<span class="highlight">' + content[charIdx] + content.substr((charIdx +1), content.length);
 	        break;
 	    case "middle":
-	        var newContent = content;//.substr(0, charIdx) + content[charIdx] + content.substr((charIdx +1), content.length);
+	        var newContent = content;
 	        break;
 	    case "last":
 	        var newContent = content.substr(0, charIdx +24) + content[charIdx + 24] + '</span>' + content.substr((charIdx +25), content.length);
@@ -191,7 +185,6 @@ function highlight(match){
 	        break
 	}
 	
-	//console.log(newContent);
 	div.innerHTML = newContent;//clear old content and append highlighted one
 }
 
