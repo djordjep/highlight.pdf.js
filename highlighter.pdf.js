@@ -99,7 +99,6 @@ for(i = 0; i < textLayer.children.length -1; i++){
 console.log(match);
 
 function Prefix(match){
-	//prefix = noWhitespace(prefix);
 	var k = 0;
 	var j=0;
 	var divIdx = match[0].divIdx;
@@ -118,6 +117,7 @@ function Prefix(match){
 		//console.log("j", j, "k", k, "i", i);	
 		if(/\s/.test(divText[charIdx + j - k])){ j--;};
 		if(/\s/.test(prefix[i])){ i--;};
+		if(i <= 0){break;};
 		console.log(i,j,k);
 		console.log('divText char:', divText[charIdx + j - k], 'prefix char:', prefix[i]);
 		if (divText[charIdx + j - k] === prefix[i]){ // if div is changed k will reset position counter (j) to start from the end of previous div
@@ -132,7 +132,6 @@ function Prefix(match){
 }
 
 function Suffix(match){
-	//suffix = noWhitespace(suffix); //trim whitespace from suffix
 	var k = 0;
 	var j=0;
 	var divIdx = match[match.length-1].divIdx;
@@ -149,6 +148,7 @@ function Suffix(match){
 		console.log('divText char:',divText[charIdx + j - k], 'suffix char:',suffix[i]);
 		if(/\s/.test(divText[charIdx + j - k])){ j++;}; //if next char is whitespace try next char()
 		if(/\s/.test(suffix[i])){ i++;};
+		if(i > suffix.length-1){break;};
 		if (divText[charIdx + j - k] === suffix[i]){ // if div is changed k will reset position counter (j) to start from the begining of the next div
 			continue;
 		}else{
